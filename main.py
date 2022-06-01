@@ -25,11 +25,9 @@ def main():
             self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue", highlightthickness=2)
             self.main_frame.grid(row=1, column=1, pady=10)
 
-            #Placeholder image
+            # Placeholder image
             self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
             self.placeholder_label.grid(row=1, column=1)
-
-
 
             # Navigation buttons
             self.exit_button = Button(self.root, text='Exit', command=self.Close)
@@ -41,10 +39,10 @@ def main():
             self.add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
             self.add_image_button.grid(row=0, column=1, padx=210)
 
-            #Edit Attributes
+            # Edit Attributes
             self.text_entry = None
 
-            #drop down
+            # drop down
             self.position_options = ['Center',
                                      'Top Right',
                                      'Top Center',
@@ -57,10 +55,6 @@ def main():
             self.drop = None
 
             self.submit_edit = None
-
-
-
-
 
             self.root.mainloop()
 
@@ -116,51 +110,37 @@ def main():
             :param image: takes our resized image as input
             :return:
             """
-            #Assign classes image attribute
+            # Assign classes image attribute
             self.image = ImageTk.PhotoImage(image)
-            #Enable next button *refactor*
+            # Enable next button *refactor*
             self.edit_button_state = 'active'
             self.button_edit.config(state=self.edit_button_state)
 
-
             # Reassigning our main label within a mainframe
             self.main_label = Label(self.main_frame, image=self.image).grid(row=1, column=1)
-            #Removing the placeholder image
+            # Removing the placeholder image
             self.placeholder_label.grid_forget()
 
-
-
-
         def submit(self):
-             text = self.text_entry.get()
-             position = self.clicked.get()
-             print(text, position)
-
+            text = self.text_entry.get()
+            position = self.clicked.get()
+            print(text, position)
 
         def edit(self):
-
             self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
             self.submit_edit_button.grid(row=4, column=1, pady=2)
 
-            #show text box
+            # show text box
             self.text_entry = Entry(self.root, width=20)
             self.text_entry.grid(row=2, column=1, pady=2)
             self.text_entry.insert(0, 'Enter Desired text')
 
-            #show drop down
+            # show drop down
             self.clicked = StringVar()
             self.clicked.set(self.position_options[0])
 
             self.drop = OptionMenu(self.root, self.clicked, *self.position_options)
             self.drop.grid(row=3, column=1, pady=2)
-
-
-
-
-
-
-
-
 
     test = Window()
 
