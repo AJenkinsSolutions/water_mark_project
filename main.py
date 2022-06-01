@@ -12,10 +12,19 @@ def main():
             self.root.title('Root Window')
             # Button states
             self.next_button_state = 'disabled'
-
-            #USEFUl vars
+            # USEFUl vars
             self.filename = None
             self.image = None
+
+            # Configure place holder **refactor later**
+            self.placeholder_image = None
+            self.config_placeholder()
+            #   Frame
+            self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="black",
+                                    highlightthickness=2).grid(row=1, column=1, pady=30)
+            self.main_label = Label(self.main_frame, image=self.placeholder_image).grid(row=1, column=1)
+
+
 
             # Navigation buttons
             exit_button = Button(self.root, text='Exit', command=self.Close)
@@ -37,18 +46,29 @@ def main():
             """
             self.root.quit()
 
+        def config_placeholder(self):
+            ph_image = Image.open('images/placeholder-image.png')
+            ph_width, ph_height = ph_image.size
+            resized_ph_image = ph_image.resize((int(ph_width / 2), int(ph_height / 2)), Image.ANTIALIAS)
+            self.placeholder_image = ImageTk.PhotoImage(resized_ph_image)
+
         def browse_files(self):
             """
+            Ask open file name func user selects a files
             Assigns file name path to self.filename parameter
+            calls resize_image function
+            calls assign image function then displays to screen frame
+
             :return:
             """
-            self.filename = fd.askopenfilename(initialdir="/",
-                                               title="Select a File",
-                                               filetypes=(("image files",
-                                                           '*.JPG .jpeg .png'),
-                                                          ("all files",
-                                                           "*.*")))
-            self.assign_image(self.resize_image())
+            if self.filename == None:
+                self.filename = fd.askopenfilename(initialdir="/",
+                                                   title="Select a File",
+                                                   filetypes=(("image files",
+                                                               '*.JPG .jpeg .png'),
+                                                              ("all files",
+                                                               "*.*")))
+                self.assign_image(self.resize_image())
 
         def resize_image(self):
             """
@@ -60,9 +80,9 @@ def main():
             """
             raw_image = Image.open(self.filename)
             width, height = raw_image.size
+            print(width, height)
             resized_image = raw_image.resize((int(width / 2), int(height / 2)), Image.ANTIALIAS)
             return resized_image
-
 
         def assign_image(self, image):
             """
@@ -72,35 +92,10 @@ def main():
             :return:
             """
             self.image = ImageTk.PhotoImage(image)
-            my_label = Label(self.root, image=self.image).grid(row=1, column=1)
 
+            # Reassigning our main label within a mainframe
+            self.main_label = Label(self.main_frame, image=self.image).grid(row=1, column=1)
 
-    # def browseFiles():
-    #     filename = fd.askopenfilename(initialdir="/",
-    #                                   title="Select a File",
-    #                                   filetypes=(("image files",
-    #                                               '*.JPG .jpeg .png'),
-    #                                              ("all files",
-    #                                               "*.*")))
-    #     my_img = ImageTk.PhotoImage(Image.open(str(filename)))
-    #     my_label = Label(root, image=my_img)
-    #     my_label.grid(row=1, column=1)
-    #     # main_label.config(image=my_img, padx=10, pady=10)
-    #     # main_label.grid(row=0, column=0)
-    # button_exit = Button(root, text='Exit', command=exit)
-    # button_exit.grid(row=0, column=0, padx=10, pady=10)
-    #
-    # button_next = Button(root, text='Next')
-    # button_next.grid(row=0, column=2, padx=10, pady=10)
-    #
-    # add_image_button = Button(root, text='Add Image', command=browseFiles)
-    # add_image_button.grid(row=0, column=1, padx=210)
-    #
-    # frame = LabelFrame(root, text='This is my label frame', padx=10, pady='10')
-    # frame.grid(row=1, column=0, columnspan=3)
-
-    # main_label = Label(frame)
-    # main_label.grid(row=0, column=0)
 
     test = Window()
 
