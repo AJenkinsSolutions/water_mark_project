@@ -53,8 +53,10 @@ def main():
                                      'Bottom Middle',
                                      'Bottom Left']
 
-            self.clicked = StringVar()
-            self.clicked.set(self.position_options[0])
+            self.clicked = None
+            self.drop = None
+
+            self.submit_edit = None
 
 
 
@@ -127,16 +129,32 @@ def main():
             self.placeholder_label.grid_forget()
 
 
+
+
+        def submit(self):
+             text = self.text_entry.get()
+             position = self.clicked.get()
+             print(text, position)
+
+
         def edit(self):
+
+            self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
+            self.submit_edit_button.grid(row=4, column=1, pady=2)
+
             #show text box
             self.text_entry = Entry(self.root, width=20)
             self.text_entry.grid(row=2, column=1, pady=2)
             self.text_entry.insert(0, 'Enter Desired text')
 
             #show drop down
+            self.clicked = StringVar()
+            self.clicked.set(self.position_options[0])
 
-            drop = OptionMenu(self.root, self.clicked, *self.position_options)
-            drop.grid(row=3, column=1)
+            self.drop = OptionMenu(self.root, self.clicked, *self.position_options)
+            self.drop.grid(row=3, column=1, pady=2)
+
+
 
 
 
