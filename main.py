@@ -11,7 +11,7 @@ def main():
             self.root.geometry('600x400+50+50')
             self.root.title('Root Window')
             # Button states
-            self.next_button_state = 'disabled'
+            self.edit_button_state = 'disabled'
 
             # USEFUl vars
             self.filename = None
@@ -22,23 +22,24 @@ def main():
             self.placeholder_image = None
             self.config_placeholder()
             #   Frame
-            self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue",
-                                    highlightthickness=2).grid(row=1, column=1, pady=30)
+            self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue", highlightthickness=2)
+            self.main_frame.grid(row=1, column=1, pady=30)
 
+            #Placeholder image
             self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
             self.placeholder_label.grid(row=1, column=1)
 
 
 
             # Navigation buttons
-            exit_button = Button(self.root, text='Exit', command=self.Close)
-            exit_button.grid(row=0, column=0, padx=10, pady=10)
+            self.exit_button = Button(self.root, text='Exit', command=self.Close)
+            self.exit_button.grid(row=0, column=0, padx=10, pady=10)
 
-            self.button_next = Button(self.root, text='Next', state=self.next_button_state, command=self.next)
-            self.button_next.grid(row=0, column=2, padx=10, pady=10)
+            self.button_edit = Button(self.root, text='Edit', state=self.edit_button_state, command=self.edit)
+            self.button_edit.grid(row=0, column=2, padx=10, pady=10)
 
-            add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
-            add_image_button.grid(row=0, column=1, padx=210)
+            self.add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
+            self.add_image_button.grid(row=0, column=1, padx=210)
 
             self.root.mainloop()
 
@@ -94,19 +95,22 @@ def main():
             :param image: takes our resized image as input
             :return:
             """
+            #Assign classes image attribute
             self.image = ImageTk.PhotoImage(image)
-            #Enable next button
-            self.next_button_state = 'active'
-            self.button_next.config(state=self.next_button_state)
+            #Enable next button *refactor*
+            self.edit_button_state = 'active'
+            self.button_edit.config(state=self.edit_button_state)
 
 
             # Reassigning our main label within a mainframe
             self.main_label = Label(self.main_frame, image=self.image).grid(row=1, column=1)
+            #Removing the placeholder image
             self.placeholder_label.grid_forget()
 
-        def next(self):
+        def edit(self):
             #show text box
-            e = Entry(self.root).grid(row=2, column=1)
+            text_entry = Entry(self.root)
+            text_entry.grid(row=2, column=1)
 
 
 
