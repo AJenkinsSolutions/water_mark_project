@@ -23,7 +23,7 @@ def main():
             self.config_placeholder()
             #   Frame
             self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue", highlightthickness=2)
-            self.main_frame.grid(row=1, column=1, pady=30)
+            self.main_frame.grid(row=1, column=1, pady=10)
 
             #Placeholder image
             self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
@@ -40,6 +40,25 @@ def main():
 
             self.add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
             self.add_image_button.grid(row=0, column=1, padx=210)
+
+            #Edit Attributes
+            self.text_entry = None
+
+            #drop down
+            self.position_options = ['Center',
+                                     'Top Right',
+                                     'Top Center',
+                                     'Top Left',
+                                     'Bottom Right',
+                                     'Bottom Middle',
+                                     'Bottom Left']
+
+            self.clicked = StringVar()
+            self.clicked.set(self.position_options[0])
+
+
+
+
 
             self.root.mainloop()
 
@@ -107,10 +126,20 @@ def main():
             #Removing the placeholder image
             self.placeholder_label.grid_forget()
 
+
         def edit(self):
             #show text box
-            text_entry = Entry(self.root)
-            text_entry.grid(row=2, column=1)
+            self.text_entry = Entry(self.root, width=20)
+            self.text_entry.grid(row=2, column=1, pady=2)
+            self.text_entry.insert(0, 'Enter Desired text')
+
+            #show drop down
+
+            drop = OptionMenu(self.root, self.clicked, *self.position_options)
+            drop.grid(row=3, column=1)
+
+
+
 
 
 
