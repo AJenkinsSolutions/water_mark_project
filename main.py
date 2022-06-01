@@ -12,17 +12,21 @@ def main():
             self.root.title('Root Window')
             # Button states
             self.next_button_state = 'disabled'
+
             # USEFUl vars
             self.filename = None
             self.image = None
+            self.main_label = None
 
             # Configure place holder **refactor later**
             self.placeholder_image = None
             self.config_placeholder()
             #   Frame
-            self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="black",
+            self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue",
                                     highlightthickness=2).grid(row=1, column=1, pady=30)
-            self.main_label = Label(self.main_frame, image=self.placeholder_image).grid(row=1, column=1)
+
+            self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
+            self.placeholder_label.grid(row=1, column=1)
 
 
 
@@ -30,8 +34,8 @@ def main():
             exit_button = Button(self.root, text='Exit', command=self.Close)
             exit_button.grid(row=0, column=0, padx=10, pady=10)
 
-            button_next = Button(self.root, text='Next', state=self.next_button_state)
-            button_next.grid(row=0, column=2, padx=10, pady=10)
+            self.button_next = Button(self.root, text='Next', state=self.next_button_state, command=self.next)
+            self.button_next.grid(row=0, column=2, padx=10, pady=10)
 
             add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
             add_image_button.grid(row=0, column=1, padx=210)
@@ -61,14 +65,13 @@ def main():
 
             :return:
             """
-            if self.filename == None:
-                self.filename = fd.askopenfilename(initialdir="/",
-                                                   title="Select a File",
-                                                   filetypes=(("image files",
-                                                               '*.JPG .jpeg .png'),
-                                                              ("all files",
-                                                               "*.*")))
-                self.assign_image(self.resize_image())
+            self.filename = fd.askopenfilename(initialdir="/",
+                                               title="Select a File",
+                                               filetypes=(("image files",
+                                                           '*.JPG .jpeg .png'),
+                                                          ("all files",
+                                                           "*.*")))
+            self.assign_image(self.resize_image())
 
         def resize_image(self):
             """
@@ -92,9 +95,20 @@ def main():
             :return:
             """
             self.image = ImageTk.PhotoImage(image)
+            #Enable next button
+            self.next_button_state = 'active'
+            self.button_next.config(state=self.next_button_state)
+
 
             # Reassigning our main label within a mainframe
             self.main_label = Label(self.main_frame, image=self.image).grid(row=1, column=1)
+            self.placeholder_label.grid_forget()
+
+        def next(self):
+            #show text box
+            e = Entry(self.root).grid(row=2, column=1)
+
+
 
 
     test = Window()
