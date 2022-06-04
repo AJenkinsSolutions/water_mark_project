@@ -56,7 +56,7 @@ def main():
                                      'Top Center',
                                      'Top Left',
                                      'Bottom Right',
-                                     'Bottom Middle',
+                                     'Bottom Center',
                                      'Bottom Left']
 
             self.clicked = None
@@ -162,19 +162,48 @@ def main():
 
 
             # Placement
-            #   Todo Add placement dictionary
+            #   Todo Add placement dictionary refactor
 
             margin = 10
 
-            # Bottom right
+            #Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
-            # Center
+            #Center
             center = ((image_width / 2) - (text_width/2)), ((image_height/2) - (text_height))
 
+            bottom_left = ((0 + margin), (image_height - text_height - margin))
+
+            #top_left
+            top_left = ((0 + margin), (0 + margin))
+
+            #top_right
+            top_right = ((image_width - text_width - margin), (0+ margin))
+
+            #Bottom_center
+            bottom_center = ((image_width / 2) - (text_width/2), (image_height - text_height - margin))
+
+            top_center = ((image_width / 2) - (text_width/2), (0))
+
+
+            # TODO add placement coordinates
             if placement == 'Bottom Right':
                 placement = bottom_right
             elif placement == 'Center':
                 placement = center
+            elif placement == 'Bottom Left':
+                placement = bottom_left
+            elif placement == 'Top Left':
+                placement = top_left
+            elif placement == 'Top Right':
+                placement = top_right
+            elif placement == 'Bottom Center':
+                placement = bottom_center
+            elif placement == 'Top Center':
+                placement = top_center
+
+
+
+
 
             #draw water mark to center
             draw.text((placement), watermark_text, font=watermark_font)
