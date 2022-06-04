@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import filedialog as fd
-from PIL import ImageTk, Image
-
+from PIL import ImageTk, Image, ImageDraw, ImageFont
 
 def main():
     class Window():
@@ -17,6 +16,10 @@ def main():
             self.filename = None
             self.image = None
             self.main_label = None
+
+            # Watermark configure
+            self.water_mark_text = None
+            self.water_mark_placement = None
 
             # Configure place holder **refactor later**
             self.placeholder_image = None
@@ -100,8 +103,8 @@ def main():
             raw_image = Image.open(self.filename)
             width, height = raw_image.size
             print(width, height)
-            resized_image = raw_image.resize((int(width / 2), int(height / 2)), Image.ANTIALIAS)
-            return resized_image
+            pre_watermark_image = raw_image.resize((int(width / 2), int(height / 2)), Image.ANTIALIAS)
+            return pre_watermark_image
 
         def assign_image(self, image):
             """
@@ -122,9 +125,59 @@ def main():
             self.placeholder_label.grid_forget()
 
         def submit(self):
-            text = self.text_entry.get()
-            position = self.clicked.get()
-            print(text, position)
+            self.water_mark_text = self.text_entry.get()
+            self.water_mark_placement = self.clicked.get()
+            print(self.water_mark_text, self.water_mark_placement)
+
+            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename)
+
+        def add_water_mark(self, text, placement, image):
+
+            # Create image object
+            opened_image = Image.open(image)
+
+            # Get image size
+            image_width, image_height = opened_image.size
+            # print('w', image_width)
+            # print('h', image_height)
+
+            # Draw Image Object
+            draw = ImageDraw.Draw(opened_image)
+
+            watermark_text = text
+            font_size_adj = 8
+            if len(watermark_text) > 10:
+                font_size_adj = 12
+            # if len of text is greater then 10 characters we need to in increase this number
+            font_size = int(image_width / font_size_adj)
+
+
+            watermark_font = ImageFont.truetype('/Library/Fonts/Arial.ttf', font_size)
+            text_width, text_height = draw.textsize(watermark_text, watermark_font)
+
+
+            # Placement
+
+            margin = 10
+
+            # Bottom right
+            bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
+
+            # Center
+            center = (text_width / 2), (0 + image_height/2)
+
+
+
+
+
+
+            #draw water mark to center
+            draw.text((bottom_right), watermark_text, font=watermark_font)
+            #show
+            opened_image.show()
+
+
+
 
         def edit(self):
             self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
@@ -133,7 +186,7 @@ def main():
             # show text box
             self.text_entry = Entry(self.root, width=20)
             self.text_entry.grid(row=2, column=1, pady=2)
-            self.text_entry.insert(0, 'Enter Desired text')
+            self.text_entry.insert(0, 'hello world')
 
             # show drop down
             self.clicked = StringVar()
