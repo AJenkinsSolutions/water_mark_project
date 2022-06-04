@@ -169,7 +169,7 @@ def main():
             # Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
             # Center
-            center = (text_width / 2), (0 + image_height/2)
+            center = ((image_width / 2) - (text_width/2)), ((image_height/2) - (text_height))
 
             if placement == 'Bottom Right':
                 placement = bottom_right
