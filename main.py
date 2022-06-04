@@ -20,6 +20,11 @@ def main():
             # Watermark configure
             self.water_mark_text = None
             self.water_mark_placement = None
+            # self.image_width = None
+            # self.image_height = None
+            # self.text_width = None
+            # self.text_height = None
+            # self.margin = None
 
             # Configure place holder **refactor later**
             self.placeholder_image = None
@@ -157,22 +162,22 @@ def main():
 
 
             # Placement
+            #   Todo Add placement dictionary
 
             margin = 10
 
             # Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
-
             # Center
             center = (text_width / 2), (0 + image_height/2)
 
-
-
-
-
+            if placement == 'Bottom Right':
+                placement = bottom_right
+            elif placement == 'Center':
+                placement = center
 
             #draw water mark to center
-            draw.text((bottom_right), watermark_text, font=watermark_font)
+            draw.text((placement), watermark_text, font=watermark_font)
             #show
             opened_image.show()
 
