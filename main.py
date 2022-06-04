@@ -203,18 +203,20 @@ def main():
             #draw water mark to center
             draw.text((placement), watermark_text, font=watermark_font)
 
-            #show
-            # opened_image.show()
             self.watermark_image = opened_image
             # self.watermark_image.show()
+            self.preview(self.watermark_image)
 
+        def preview(self, image):
             preview_window = Toplevel()
             preview_window.title('Preview')
-            ph = ImageTk.PhotoImage(self.watermark_image)
+            ph = ImageTk.PhotoImage(image)
 
             label = Label(preview_window, image=ph)
             label.image=ph
             label.grid(row=0, column=0)
+            close_btn = Button(preview_window, text='Close', command=preview_window.destroy)
+            close_btn.grid(row=1, column=0)
 
 
         # def preview(self):
