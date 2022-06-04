@@ -200,17 +200,32 @@ def main():
                 placement = bottom_center
             elif placement == 'Top Center':
                 placement = top_center
-
-
-
-
-
             #draw water mark to center
             draw.text((placement), watermark_text, font=watermark_font)
+
             #show
-            opened_image.show()
+            # opened_image.show()
+            self.watermark_image = opened_image
+            # self.watermark_image.show()
+
+            preview_window = Toplevel()
+            preview_window.title('Preview')
+            ph = ImageTk.PhotoImage(self.watermark_image)
+
+            label = Label(preview_window, image=ph)
+            label.image=ph
+            label.grid(row=0, column=0)
 
 
+        # def preview(self):
+        #     preview_window = Toplevel()
+        #     preview_window.title('Preview')
+        #     img = ImageTk.PhotoImage(self.watermark_image)
+        #
+        #     label = Label(preview_window, image=img)
+        #     label.grid(row=0, column=0)
+        #     # close_btn = Button(preview_window, text='Close', command=preview_window.destroy)
+        #     # close_btn.pack()
 
 
         def edit(self):
