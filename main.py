@@ -159,6 +159,7 @@ def main():
             image_width, image_height = opened_image.size
             # Draw Image Object
             draw = ImageDraw.Draw(opened_image)
+
             # User chosen Text
             watermark_text = text
 
@@ -248,6 +249,35 @@ def main():
             print('saving')
             image.save('watermark.jpg')
 
+        def browse_Logo_files(self):
+            self.logo_filename = fd.askopenfilename(initialdir="/",
+                                               title="Select a File",
+                                               filetypes=(("image files",
+                                                           '.png'),
+                                                          ("all files",
+                                                           "*.*")))
+            print(self.logo_filename)
+
+            # Assign our reszied logo readyt for implementing
+            self.resized_logo = self.resize_logo()
+
+        def resize_logo(self):
+
+            # get the dimensions of our logo
+            raw_logo = Image.open(self.logo_filename)
+            logo_width, logo_height = raw_logo.size
+            print(logo_height, logo_width)
+
+            #get the orignal images dimensions
+            raw_image = Image.open(self.filename)
+            width, height = raw_image.size
+            print(width, height)
+
+            # we want to make the logo 1/3 the size of the orignal image
+            resized_logo = raw_logo.resize((int(width / 3), int(height / 3)), Image.ANTIALIAS)
+            return resized_logo
+
+
         def edit(self):
             """
             EDIT: Displays Text Entry, Drop Down Options Menu, Submit Button]
@@ -256,25 +286,27 @@ def main():
             Submit: Triggers preview Pop up window of watermakred image
             """
 
-            # self.edit_label_3 = Label(self.edit_frame, text='hello 3')
-            # self.edit_label_3.grid(row=2, column=0, padx=25)
-
-            # Add LOGO Button
-            self.add_logo = Button(self.edit_frame, text='Add Logo')
+            # LOGO: Add Button
+            self.add_logo = Button(self.edit_frame, text='Add Logo', command=self.browse_Logo_files)
             self.add_logo.grid(row=0, column=1, padx=10)
 
-            # LOGO Drop Down
+            # LOGO: Drop Down
             self.clicked_logo = StringVar()
             self.clicked_logo.set(self.position_options[0])
             self.drop_logo = OptionMenu(self.edit_frame, self.clicked_logo, *self.position_options)
             self.drop_logo.grid(row=1, column=1, pady=2, padx=10)
 
-            # Text entry Box
+
+
+
+
+
+            # Text: Entry Box
             self.text_entry = Entry(self.edit_frame, width=10)
             self.text_entry.grid(row=0, column=0, pady=2, padx=10)
             self.text_entry.insert(0, 'hello world')
 
-            # show drop down
+            # Text: Drop down
             self.clicked = StringVar()
             self.clicked.set(self.position_options[0])
             self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
