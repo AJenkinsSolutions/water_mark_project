@@ -5,10 +5,13 @@ from PIL import ImageTk, Image, ImageDraw, ImageFont
 def main():
     class Window():
         def __init__(self):
+
+
             # Creating window
             self.root = Tk()
             self.root.geometry('600x400+50+50')
             self.root.title('Root Window')
+
             # Button states
             self.edit_button_state = 'disabled'
 
@@ -17,9 +20,8 @@ def main():
             self.image = None
             self.main_label = None
 
-            # Watermark configure
-            self.water_mark_text = None
-            self.water_mark_placement = None
+
+
             # self.image_width = None
             # self.image_height = None
             # self.text_width = None
@@ -29,9 +31,17 @@ def main():
             # Configure place holder **refactor later**
             self.placeholder_image = None
             self.config_placeholder()
+
             #   Frame
             self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue", highlightthickness=2)
             self.main_frame.grid(row=1, column=1, pady=10)
+
+            #edit frame
+            self.edit_frame = Frame(self.root, highlightbackground="blue", highlightthickness=2)
+            self.edit_frame.grid(row=2, column=0, columnspan=3)
+
+
+
 
             # Placeholder image
             self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
@@ -41,15 +51,17 @@ def main():
             self.exit_button = Button(self.root, text='Exit', command=self.Close)
             self.exit_button.grid(row=0, column=0, padx=10, pady=10)
 
+            # Edit button
             self.button_edit = Button(self.root, text='Edit', state=self.edit_button_state, command=self.edit)
             self.button_edit.grid(row=0, column=2, padx=10, pady=10)
 
+            # Add Image
             self.add_image_button = Button(self.root, text='Add Image', command=self.browse_files)
             self.add_image_button.grid(row=0, column=1, padx=210)
 
-            # Edit Attributes
-            self.text_entry = None
+            # Edit Window Attributes
 
+            self.text_entry = None
             # drop down
             self.position_options = ['Center',
                                      'Top Right',
@@ -58,10 +70,11 @@ def main():
                                      'Bottom Right',
                                      'Bottom Center',
                                      'Bottom Left']
+            # Watermark configure
+            self.water_mark_text = None
+            self.water_mark_placement = None
 
-            self.clicked = None
             self.drop = None
-
             self.submit_edit = None
 
             self.root.mainloop()
@@ -138,54 +151,50 @@ def main():
 
         def add_water_mark(self, text, placement, image):
 
+
+
             # Create image object
             opened_image = Image.open(image)
-
             # Get image size
             image_width, image_height = opened_image.size
-            # print('w', image_width)
-            # print('h', image_height)
-
             # Draw Image Object
             draw = ImageDraw.Draw(opened_image)
-
+            # User chosen Text
             watermark_text = text
+
+            # Default Font size
             font_size_adj = 8
             if len(watermark_text) > 10:
                 font_size_adj = 12
-            # if len of text is greater then 10 characters we need to in increase this number
+
+            # If len of text is greater then 10 characters we need to in increase this number
             font_size = int(image_width / font_size_adj)
 
-
+            # Retrieving our Font sizes from out computer
             watermark_font = ImageFont.truetype('/Library/Fonts/Arial.ttf', font_size)
             text_width, text_height = draw.textsize(watermark_text, watermark_font)
 
-
             # Placement
-            #   Todo Add placement dictionary refactor
+            #Todo Add placement dictionary refactor
 
             margin = 10
-
-            #Bottom right
+            # Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
-            #Center
+            # Center
             center = ((image_width / 2) - (text_width/2)), ((image_height/2) - (text_height))
-
+            # Bottom Left
             bottom_left = ((0 + margin), (image_height - text_height - margin))
-
-            #top_left
+            # Top_left
             top_left = ((0 + margin), (0 + margin))
-
-            #top_right
-            top_right = ((image_width - text_width - margin), (0+ margin))
-
-            #Bottom_center
+            # Top_right
+            top_right = ((image_width - text_width - margin), (0 + margin))
+            # Bottom_center
             bottom_center = ((image_width / 2) - (text_width/2), (image_height - text_height - margin))
+            # Top center
+            top_center = ((image_width / 2) - (text_width/2), 0)
 
-            top_center = ((image_width / 2) - (text_width/2), (0))
 
-
-            # TODO add placement coordinates
+            # TODO Refactor
             if placement == 'Bottom Right':
                 placement = bottom_right
             elif placement == 'Center':
@@ -200,51 +209,80 @@ def main():
                 placement = bottom_center
             elif placement == 'Top Center':
                 placement = top_center
-            #draw water mark to center
-            draw.text((placement), watermark_text, font=watermark_font)
 
+            # Draw watermark to image
+            draw.text((placement), watermark_text, font=watermark_font)
+            # Assign Water mark
             self.watermark_image = opened_image
             # self.watermark_image.show()
             self.preview(self.watermark_image)
 
         def preview(self, image):
+            """
+            Pressing 'Submit' from the Edit window
+            triggers preview pop is displayed to the screen
+            displaying the image with watermark
+            :param image: image from edit window
+
+            """
+            # Creating our pop up window
             preview_window = Toplevel()
             preview_window.title('Preview')
-            ph = ImageTk.PhotoImage(image)
 
-            label = Label(preview_window, image=ph)
-            label.image=ph
+            # Assigning our Image
+            self.ph = ImageTk.PhotoImage(image)
+            # Display for Image
+            label = Label(preview_window, image=self.ph)
+            # Reference to our image *tkinter garbage collection*
+            label.image = self.ph
             label.grid(row=0, column=0)
+
+            save_btn = Button(preview_window, text='Save',command=lambda: self.save(image))
+            save_btn.grid(row=1, column=0)
+
+            # Close button
             close_btn = Button(preview_window, text='Close', command=preview_window.destroy)
-            close_btn.grid(row=1, column=0)
+            close_btn.grid(row=2, column=0, pady=1)
 
-
-        # def preview(self):
-        #     preview_window = Toplevel()
-        #     preview_window.title('Preview')
-        #     img = ImageTk.PhotoImage(self.watermark_image)
-        #
-        #     label = Label(preview_window, image=img)
-        #     label.grid(row=0, column=0)
-        #     # close_btn = Button(preview_window, text='Close', command=preview_window.destroy)
-        #     # close_btn.pack()
-
+        def save(self, image):
+            print('saving')
+            image.save('watermark.jpg')
 
         def edit(self):
-            self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
-            self.submit_edit_button.grid(row=4, column=1, pady=2)
+            """
+            EDIT: Displays Text Entry, Drop Down Options Menu, Submit Button]
+            Text Entry: Gets user input string to be displayed as watermark
+            Drop Down: Lets user choose between options displayed in drop down list
+            Submit: Triggers preview Pop up window of watermakred image
+            """
 
-            # show text box
-            self.text_entry = Entry(self.root, width=20)
-            self.text_entry.grid(row=2, column=1, pady=2)
+            # self.edit_label_3 = Label(self.edit_frame, text='hello 3')
+            # self.edit_label_3.grid(row=2, column=0, padx=25)
+
+            # Add LOGO Button
+            self.add_logo = Button(self.edit_frame, text='Add Logo')
+            self.add_logo.grid(row=0, column=1, padx=10)
+
+            # LOGO Drop Down
+            self.clicked_logo = StringVar()
+            self.clicked_logo.set(self.position_options[0])
+            self.drop_logo = OptionMenu(self.edit_frame, self.clicked_logo, *self.position_options)
+            self.drop_logo.grid(row=1, column=1, pady=2, padx=10)
+
+            # Text entry Box
+            self.text_entry = Entry(self.edit_frame, width=10)
+            self.text_entry.grid(row=0, column=0, pady=2, padx=10)
             self.text_entry.insert(0, 'hello world')
 
             # show drop down
             self.clicked = StringVar()
             self.clicked.set(self.position_options[0])
+            self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
+            self.drop.grid(row=1, column=0, pady=2, padx=10)
 
-            self.drop = OptionMenu(self.root, self.clicked, *self.position_options)
-            self.drop.grid(row=3, column=1, pady=2)
+            # Submit Button
+            self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
+            self.submit_edit_button.grid(row=4, column=1, pady=2)
 
     test = Window()
 
