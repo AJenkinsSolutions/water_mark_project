@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import filedialog as fd
 from PIL import ImageTk, Image, ImageDraw, ImageFont
+import matplotlib.pyplot as plt
+
 
 def main():
     class Window():
@@ -149,6 +151,7 @@ def main():
 
             self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename)
 
+
         def add_water_mark(self, text, placement, image):
 
 
@@ -215,6 +218,30 @@ def main():
             draw.text((placement), watermark_text, font=watermark_font)
             # Assign Water mark
             self.watermark_image = opened_image
+
+            #TODO Add logo
+            # image watermark
+
+            image = Image.open(image)
+
+            plt.imshow(image)
+            size = (500, 100)
+            crop_image = Image.open(self.logo_filename)
+            # to keep the aspect ration in intact
+
+
+            # add watermark
+            copied_image = image.copy()
+            crop_image.thumbnail(size)
+
+            # base image
+            copied_image.paste(crop_image, (500, 200))
+            # pasted the crop image onto the base image
+            plt.imshow(copied_image)
+            copied_image.show()
+
+
+
             # self.watermark_image.show()
             self.preview(self.watermark_image)
 
