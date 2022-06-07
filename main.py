@@ -156,18 +156,14 @@ def main():
 
         def add_water_mark(self, text, placement, image, logo_placement):
 
-
-
             # Create image object
             opened_image = Image.open(image)
             # Get image size
             image_width, image_height = opened_image.size
             # Draw Image Object
             draw = ImageDraw.Draw(opened_image)
-
             # User chosen Text
             watermark_text = text
-
             # Default Font size
             font_size_adj = 8
             if len(watermark_text) > 10:
@@ -181,8 +177,6 @@ def main():
             text_width, text_height = draw.textsize(watermark_text, watermark_font)
 
             # Placement
-            #Todo Add placement dictionary refactor
-
             margin = 10
             # Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
@@ -198,8 +192,6 @@ def main():
             bottom_center = ((image_width / 2) - (text_width/2), (image_height - text_height - margin))
             # Top center
             top_center = ((image_width / 2) - (text_width/2), 0)
-
-
 
             # text Placement
             if placement == 'Bottom Right':
@@ -238,7 +230,6 @@ def main():
             logo_top_right = (int(image_width - logo_width), 0)
             # Top center
             logo_top_center = (int(image_width / 2) - int(logo_width / 2), 0)
-
             # Bottom_center
             logo_bottom_center = (int(image_width / 2) - int(logo_width / 2), (image_height - logo_height))
             # Bottom Left
@@ -248,7 +239,6 @@ def main():
 
 
             #   logo placement
-
             if logo_placement == 'Bottom Right':
                 logo_placement = logo_bottom_right
             elif logo_placement == 'Center':
@@ -264,29 +254,57 @@ def main():
             elif logo_placement == 'Top Center':
                 logo_placement = logo_top_center
 
-
-            #TODO Add logo
-            # image watermark
-
-            print(copied_image.size)
+            # print(copied_image.size)
             copied_image.paste(self.logo_image, (logo_placement))
-            copied_image.show()
-
-
-            # # add watermark
-            # copied_image = image.copy()
-            # crop_image.thumbnail(size)
-            #
-            # # base image
-            # copied_image.paste(crop_image, (500, 200))
-            # # pasted the crop image onto the base image
-            # plt.imshow(copied_image)
             # copied_image.show()
 
+            self.preview(copied_image)
+
+        def browse_Logo_files(self):
+            self.logo_filename = fd.askopenfilename(initialdir="/",
+                                               title="Select a File",
+                                               filetypes=(("image files",
+                                                           '.png'),
+                                                          ("all files",
+                                                           "*.*")))
+            split = self.logo_filename.split('/')[-1]
+            self.add_logo.config(text=f'{split}')
 
 
-            # self.watermark_image.show()
-            self.preview(self.watermark_image)
+        def edit(self):
+            """
+            EDIT: Displays Text Entry, Drop Down Options Menu, Submit Button]
+            Text Entry: Gets user input string to be displayed as watermark
+            Drop Down: Lets user choose between options displayed in drop down list
+            Submit: Triggers preview Pop up window of watermakred image
+            """
+
+            # LOGO: Add Button
+            self.add_logo = Button(self.edit_frame, text='Add Logo', command=self.browse_Logo_files)
+            self.add_logo.grid(row=0, column=1, padx=10)
+
+            # LOGO: Drop Down
+            self.clicked_logo = StringVar()
+            self.clicked_logo.set(self.position_options[0])
+            self.drop_logo = OptionMenu(self.edit_frame, self.clicked_logo, *self.position_options)
+            self.drop_logo.grid(row=1, column=1, pady=2, padx=10)
+
+            # Text: Entry Box
+            self.text_entry = Entry(self.edit_frame, width=10)
+            self.text_entry.grid(row=0, column=0, pady=2, padx=10)
+            self.text_entry.insert(0, 'hello world')
+
+            # Text: Drop down
+            self.clicked = StringVar()
+            self.clicked.set(self.position_options[0])
+            self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
+            self.drop.grid(row=1, column=0, pady=2, padx=10)
+
+            #Text: color drop drown
+
+            # Submit Button
+            self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
+            self.submit_edit_button.grid(row=4, column=1, pady=2)
 
         def preview(self, image):
             """
@@ -318,75 +336,6 @@ def main():
         def save(self, image):
             print('saving')
             image.save('watermark.jpg')
-
-        def browse_Logo_files(self):
-            self.logo_filename = fd.askopenfilename(initialdir="/",
-                                               title="Select a File",
-                                               filetypes=(("image files",
-                                                           '.png'),
-                                                          ("all files",
-                                                           "*.*")))
-            print(self.logo_filename)
-
-            # Assign our reszied logo readyt for implementing
-            # self.resized_logo = self.resize_logo()
-            # self.thumbnail_logo
-
-        def resize_logo(self):
-
-            # get the dimensions of our logo
-            raw_logo = Image.open(self.logo_filename)
-            logo_width, logo_height = raw_logo.size
-            print(logo_height, logo_width)
-
-            #get the orignal images dimensions
-            raw_image = Image.open(self.filename)
-            width, height = raw_image.size
-            print(width, height)
-
-            # we want to make the logo 1/3 the size of the orignal image
-            resized_logo = raw_logo.resize((int(width / 3), int(height / 3)), Image.ANTIALIAS)
-            return resized_logo
-
-
-        def edit(self):
-            """
-            EDIT: Displays Text Entry, Drop Down Options Menu, Submit Button]
-            Text Entry: Gets user input string to be displayed as watermark
-            Drop Down: Lets user choose between options displayed in drop down list
-            Submit: Triggers preview Pop up window of watermakred image
-            """
-
-            # LOGO: Add Button
-            self.add_logo = Button(self.edit_frame, text='Add Logo', command=self.browse_Logo_files)
-            self.add_logo.grid(row=0, column=1, padx=10)
-
-            # LOGO: Drop Down
-            self.clicked_logo = StringVar()
-            self.clicked_logo.set(self.position_options[0])
-            self.drop_logo = OptionMenu(self.edit_frame, self.clicked_logo, *self.position_options)
-            self.drop_logo.grid(row=1, column=1, pady=2, padx=10)
-
-
-
-
-
-
-            # Text: Entry Box
-            self.text_entry = Entry(self.edit_frame, width=10)
-            self.text_entry.grid(row=0, column=0, pady=2, padx=10)
-            self.text_entry.insert(0, 'hello world')
-
-            # Text: Drop down
-            self.clicked = StringVar()
-            self.clicked.set(self.position_options[0])
-            self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
-            self.drop.grid(row=1, column=0, pady=2, padx=10)
-
-            # Submit Button
-            self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
-            self.submit_edit_button.grid(row=4, column=1, pady=2)
-
     test = Window()
 
 
