@@ -21,6 +21,8 @@ def main():
             self.filename = None
             self.image = None
             self.main_label = None
+            self.logo_added = False
+
 
 
 
@@ -72,6 +74,14 @@ def main():
                                      'Bottom Right',
                                      'Bottom Center',
                                      'Bottom Left']
+
+            self.font_color_options = [ 'white',
+                                        'black',
+                                        'red',
+                                        'green',
+                                        'yellow'
+
+            ]
             # Watermark configure
             self.water_mark_text = None
             self.water_mark_placement = None
@@ -147,14 +157,15 @@ def main():
         def submit(self):
             self.water_mark_text = self.text_entry.get()
             self.water_mark_placement = self.clicked.get()
+            self.font_color = self.font_color_clicked.get()
             print(self.water_mark_text, self.water_mark_placement)
 
             self.logo_placement = self.clicked_logo.get()
 
-            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename, self.logo_placement)
+            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename, self.logo_placement, self.font_color, logo_status=self.logo_added)
 
 
-        def add_water_mark(self, text, placement, image, logo_placement):
+        def add_water_mark(self, text, placement, image, logo_placement, font_color, logo_status):
 
             # Create image object
             opened_image = Image.open(image)
@@ -210,55 +221,58 @@ def main():
                 placement = top_center
 
             # Draw watermark to image
-            draw.text((placement), watermark_text, font=watermark_font)
+            draw.text((placement), watermark_text, font=watermark_font, fill=font_color)
             # Assign Water mark
             self.watermark_image = opened_image
 
-            size = (500, 100)
-            # Create logo object
-            self.logo_image = Image.open(self.logo_filename)
-            # Create Thumbnail size
-            self.logo_image.thumbnail(size)
-            logo_width, logo_height = self.logo_image.size
-            copied_image = self.watermark_image.copy()
+            if logo_status == True:
+                size = (500, 100)
+                # Create logo object
+                self.logo_image = Image.open(self.logo_filename)
+                # Create Thumbnail size
+                self.logo_image.thumbnail(size)
+                logo_width, logo_height = self.logo_image.size
+                copied_image = self.watermark_image.copy()
 
-            # Center
-            logo_center = (int(image_width / 2) - int(logo_width / 2)), (int(image_height / 2) - int(logo_height))
-            # Top_left
-            logo_top_left = (0, 0)
-            # Top_right
-            logo_top_right = (int(image_width - logo_width), 0)
-            # Top center
-            logo_top_center = (int(image_width / 2) - int(logo_width / 2), 0)
-            # Bottom_center
-            logo_bottom_center = (int(image_width / 2) - int(logo_width / 2), (image_height - logo_height))
-            # Bottom Left
-            logo_bottom_left = (int(0), int(image_height - logo_height))
-            # Bottom right
-            logo_bottom_right = int(image_width - logo_width), int(image_height - logo_height)
+                # Center
+                logo_center = (int(image_width / 2) - int(logo_width / 2)), (int(image_height / 2) - int(logo_height))
+                # Top_left
+                logo_top_left = (0, 0)
+                # Top_right
+                logo_top_right = (int(image_width - logo_width), 0)
+                # Top center
+                logo_top_center = (int(image_width / 2) - int(logo_width / 2), 0)
+                # Bottom_center
+                logo_bottom_center = (int(image_width / 2) - int(logo_width / 2), (image_height - logo_height))
+                # Bottom Left
+                logo_bottom_left = (int(0), int(image_height - logo_height))
+                # Bottom right
+                logo_bottom_right = int(image_width - logo_width), int(image_height - logo_height)
 
 
-            #   logo placement
-            if logo_placement == 'Bottom Right':
-                logo_placement = logo_bottom_right
-            elif logo_placement == 'Center':
-                logo_placement = logo_center
-            elif logo_placement == 'Bottom Left':
-                logo_placement = logo_bottom_left
-            elif logo_placement == 'Top Left':
-                logo_placement = logo_top_left
-            elif logo_placement == 'Top Right':
-                logo_placement = logo_top_right
-            elif logo_placement == 'Bottom Center':
-                logo_placement = logo_bottom_center
-            elif logo_placement == 'Top Center':
-                logo_placement = logo_top_center
+                #   logo placement
+                if logo_placement == 'Bottom Right':
+                    logo_placement = logo_bottom_right
+                elif logo_placement == 'Center':
+                    logo_placement = logo_center
+                elif logo_placement == 'Bottom Left':
+                    logo_placement = logo_bottom_left
+                elif logo_placement == 'Top Left':
+                    logo_placement = logo_top_left
+                elif logo_placement == 'Top Right':
+                    logo_placement = logo_top_right
+                elif logo_placement == 'Bottom Center':
+                    logo_placement = logo_bottom_center
+                elif logo_placement == 'Top Center':
+                    logo_placement = logo_top_center
 
-            # print(copied_image.size)
-            copied_image.paste(self.logo_image, (logo_placement))
-            # copied_image.show()
+                # print(copied_image.size)
+                copied_image.paste(self.logo_image, (logo_placement))
+                # copied_image.show()
+                self.preview(copied_image)
+            else:
+                self.preview(self.watermark_image)
 
-            self.preview(copied_image)
 
         def browse_Logo_files(self):
             self.logo_filename = fd.askopenfilename(initialdir="/",
@@ -269,6 +283,8 @@ def main():
                                                            "*.*")))
             split = self.logo_filename.split('/')[-1]
             self.add_logo.config(text=f'{split}')
+            if self.logo_filename:
+                self.logo_added = True
 
 
         def edit(self):
@@ -300,7 +316,11 @@ def main():
             self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
             self.drop.grid(row=1, column=0, pady=2, padx=10)
 
-            #Text: color drop drown
+            #Text: font color drop drown
+            self.font_color_clicked = StringVar()
+            self.font_color_clicked.set(self.font_color_options[0])
+            self.font_color_drop = OptionMenu(self.edit_frame, self.font_color_clicked, *self.font_color_options)
+            self.font_color_drop.grid(row=2, column=0, pady=2, padx=10)
 
             # Submit Button
             self.submit_edit_button = Button(self.root, text='Submit', command=self.submit)
