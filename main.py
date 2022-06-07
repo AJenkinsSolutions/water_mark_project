@@ -230,39 +230,39 @@ def main():
             logo_width, logo_height = self.logo_image.size
             copied_image = self.watermark_image.copy()
 
-            margin = 10
-            # Bottom right
-            bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
             # Center
-            center = ((image_width / 2) - (text_width / 2)), ((image_height / 2) - (text_height))
-            # Bottom Left
-            bottom_left = ((0 + margin), (image_height - text_height - margin))
+            logo_center = (int(image_width / 2) - int(logo_width / 2)), (int(image_height / 2) - int(logo_height))
             # Top_left
             logo_top_left = (0, 0)
             # Top_right
-            logo_top_right = ((image_width - logo_width), 0)
+            logo_top_right = (int(image_width - logo_width), 0)
+            # Top center
+            logo_top_center = (int(image_width / 2) - int(logo_width / 2), 0)
 
             # Bottom_center
-            bottom_center = ((image_width / 2) - (text_width / 2), (image_height - text_height - margin))
-            # Top center
-            top_center = ((image_width / 2) - (text_width / 2), 0)
+            logo_bottom_center = (int(image_width / 2) - int(logo_width / 2), (image_height - logo_height))
+            # Bottom Left
+            logo_bottom_left = (int(0), int(image_height - logo_height))
+            # Bottom right
+            logo_bottom_right = int(image_width - logo_width), int(image_height - logo_height)
+
 
             #   logo placement
 
             if logo_placement == 'Bottom Right':
-                logo_placement = bottom_right
+                logo_placement = logo_bottom_right
             elif logo_placement == 'Center':
-                logo_placement = center
+                logo_placement = logo_center
             elif logo_placement == 'Bottom Left':
-                logo_placement = bottom_left
+                logo_placement = logo_bottom_left
             elif logo_placement == 'Top Left':
                 logo_placement = logo_top_left
             elif logo_placement == 'Top Right':
                 logo_placement = logo_top_right
             elif logo_placement == 'Bottom Center':
-                logo_placement = bottom_center
+                logo_placement = logo_bottom_center
             elif logo_placement == 'Top Center':
-                logo_placement = top_center
+                logo_placement = logo_top_center
 
 
             #TODO Add logo
