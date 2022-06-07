@@ -149,10 +149,12 @@ def main():
             self.water_mark_placement = self.clicked.get()
             print(self.water_mark_text, self.water_mark_placement)
 
-            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename)
+            self.logo_placement = self.clicked_logo.get()
+
+            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename, self.logo_placement)
 
 
-        def add_water_mark(self, text, placement, image):
+        def add_water_mark(self, text, placement, image, logo_placement):
 
 
 
@@ -198,7 +200,8 @@ def main():
             top_center = ((image_width / 2) - (text_width/2), 0)
 
 
-            # TODO Refactor
+
+            # text Placement
             if placement == 'Bottom Right':
                 placement = bottom_right
             elif placement == 'Center':
@@ -219,26 +222,66 @@ def main():
             # Assign Water mark
             self.watermark_image = opened_image
 
+            size = (500, 100)
+            # Create logo object
+            self.logo_image = Image.open(self.logo_filename)
+            # Create Thumbnail size
+            self.logo_image.thumbnail(size)
+            logo_width, logo_height = self.logo_image.size
+            copied_image = self.watermark_image.copy()
+
+            margin = 10
+            # Bottom right
+            bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
+            # Center
+            center = ((image_width / 2) - (text_width / 2)), ((image_height / 2) - (text_height))
+            # Bottom Left
+            bottom_left = ((0 + margin), (image_height - text_height - margin))
+            # Top_left
+            logo_top_left = (0, 0)
+            # Top_right
+            logo_top_right = ((image_width - logo_width), 0)
+
+            # Bottom_center
+            bottom_center = ((image_width / 2) - (text_width / 2), (image_height - text_height - margin))
+            # Top center
+            top_center = ((image_width / 2) - (text_width / 2), 0)
+
+            #   logo placement
+
+            if logo_placement == 'Bottom Right':
+                logo_placement = bottom_right
+            elif logo_placement == 'Center':
+                logo_placement = center
+            elif logo_placement == 'Bottom Left':
+                logo_placement = bottom_left
+            elif logo_placement == 'Top Left':
+                logo_placement = logo_top_left
+            elif logo_placement == 'Top Right':
+                logo_placement = logo_top_right
+            elif logo_placement == 'Bottom Center':
+                logo_placement = bottom_center
+            elif logo_placement == 'Top Center':
+                logo_placement = top_center
+
+
             #TODO Add logo
             # image watermark
 
-            image = Image.open(image)
-
-            plt.imshow(image)
-            size = (500, 100)
-            crop_image = Image.open(self.logo_filename)
-            # to keep the aspect ration in intact
-
-
-            # add watermark
-            copied_image = image.copy()
-            crop_image.thumbnail(size)
-
-            # base image
-            copied_image.paste(crop_image, (500, 200))
-            # pasted the crop image onto the base image
-            plt.imshow(copied_image)
+            print(copied_image.size)
+            copied_image.paste(self.logo_image, (logo_placement))
             copied_image.show()
+
+
+            # # add watermark
+            # copied_image = image.copy()
+            # crop_image.thumbnail(size)
+            #
+            # # base image
+            # copied_image.paste(crop_image, (500, 200))
+            # # pasted the crop image onto the base image
+            # plt.imshow(copied_image)
+            # copied_image.show()
 
 
 
@@ -286,7 +329,8 @@ def main():
             print(self.logo_filename)
 
             # Assign our reszied logo readyt for implementing
-            self.resized_logo = self.resize_logo()
+            # self.resized_logo = self.resize_logo()
+            # self.thumbnail_logo
 
         def resize_logo(self):
 
