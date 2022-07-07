@@ -23,15 +23,6 @@ def main():
             self.main_label = None
             self.logo_added = False
 
-
-
-
-            # self.image_width = None
-            # self.image_height = None
-            # self.text_width = None
-            # self.text_height = None
-            # self.margin = None
-
             # Configure place holder **refactor later**
             self.placeholder_image = None
             self.config_placeholder()
@@ -355,7 +346,7 @@ def main():
 
         def save(self, image):
             print('saving')
-            image.save('watermark.jpg')
+            image.save('watermark.jpeg')
     test = Window()
 
 
