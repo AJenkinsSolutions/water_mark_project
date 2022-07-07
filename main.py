@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    class Window():
+    class Window:
         def __init__(self):
-
 
             # Creating window
             self.root = Tk()
@@ -31,12 +30,9 @@ def main():
             self.main_frame = Frame(self.root, width=307, height=257, highlightbackground="blue", highlightthickness=2)
             self.main_frame.grid(row=1, column=1, pady=10)
 
-            #edit frame
+            # edit frame
             self.edit_frame = Frame(self.root, highlightbackground="blue", highlightthickness=2)
             self.edit_frame.grid(row=2, column=0, columnspan=3)
-
-
-
 
             # Placeholder image
             self.placeholder_label = Label(self.main_frame, image=self.placeholder_image)
@@ -66,13 +62,13 @@ def main():
                                      'Bottom Center',
                                      'Bottom Left']
 
-            self.font_color_options = [ 'white',
-                                        'black',
-                                        'red',
-                                        'green',
-                                        'yellow'
+            self.font_color_options = ['white',
+                                       'black',
+                                       'red',
+                                       'green',
+                                       'yellow'
 
-            ]
+                                       ]
             # Watermark configure
             self.water_mark_text = None
             self.water_mark_placement = None
@@ -153,8 +149,8 @@ def main():
 
             self.logo_placement = self.clicked_logo.get()
 
-            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename, self.logo_placement, self.font_color, logo_status=self.logo_added)
-
+            self.add_water_mark(self.water_mark_text, self.water_mark_placement, self.filename, self.logo_placement,
+                                self.font_color, logo_status=self.logo_added)
 
         def add_water_mark(self, text, placement, image, logo_placement, font_color, logo_status):
 
@@ -183,7 +179,7 @@ def main():
             # Bottom right
             bottom_right = (image_width - text_width - margin), (image_height - text_height - margin)
             # Center
-            center = ((image_width / 2) - (text_width/2)), ((image_height/2) - (text_height))
+            center = ((image_width / 2) - (text_width / 2)), ((image_height / 2) - (text_height))
             # Bottom Left
             bottom_left = ((0 + margin), (image_height - text_height - margin))
             # Top_left
@@ -191,9 +187,9 @@ def main():
             # Top_right
             top_right = ((image_width - text_width - margin), (0 + margin))
             # Bottom_center
-            bottom_center = ((image_width / 2) - (text_width/2), (image_height - text_height - margin))
+            bottom_center = ((image_width / 2) - (text_width / 2), (image_height - text_height - margin))
             # Top center
-            top_center = ((image_width / 2) - (text_width/2), 0)
+            top_center = ((image_width / 2) - (text_width / 2), 0)
 
             # text Placement
             if placement == 'Bottom Right':
@@ -240,7 +236,6 @@ def main():
                 # Bottom right
                 logo_bottom_right = int(image_width - logo_width), int(image_height - logo_height)
 
-
                 #   logo placement
                 if logo_placement == 'Bottom Right':
                     logo_placement = logo_bottom_right
@@ -264,19 +259,17 @@ def main():
             else:
                 self.preview(self.watermark_image)
 
-
         def browse_Logo_files(self):
             self.logo_filename = fd.askopenfilename(initialdir="/",
-                                               title="Select a File",
-                                               filetypes=(("image files",
-                                                           '.png'),
-                                                          ("all files",
-                                                           "*.*")))
+                                                    title="Select a File",
+                                                    filetypes=(("image files",
+                                                                '.png'),
+                                                               ("all files",
+                                                                "*.*")))
             split = self.logo_filename.split('/')[-1]
             self.add_logo.config(text=f'{split}')
             if self.logo_filename:
                 self.logo_added = True
-
 
         def edit(self):
             """
@@ -307,7 +300,7 @@ def main():
             self.drop = OptionMenu(self.edit_frame, self.clicked, *self.position_options)
             self.drop.grid(row=1, column=0, pady=2, padx=10)
 
-            #Text: font color drop drown
+            # Text: font color drop drown
             self.font_color_clicked = StringVar()
             self.font_color_clicked.set(self.font_color_options[0])
             self.font_color_drop = OptionMenu(self.edit_frame, self.font_color_clicked, *self.font_color_options)
@@ -337,16 +330,17 @@ def main():
             label.image = self.ph
             label.grid(row=0, column=0)
 
-            save_btn = Button(preview_window, text='Save',command=lambda: self.save(image))
+            save_btn = Button(preview_window, text='Save', command=lambda: self.save_image(image))
             save_btn.grid(row=1, column=0)
 
             # Close button
             close_btn = Button(preview_window, text='Close', command=preview_window.destroy)
             close_btn.grid(row=2, column=0, pady=1)
 
-        def save(self, image):
+        def save_image(self, image):
             print('saving')
-            image.save('watermark.jpeg')
+            image.save_image('watermark.jpeg')
+
     test = Window()
 
 
